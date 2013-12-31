@@ -4,9 +4,12 @@ use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::JSON;
 
 use App::skryf::Plugin::Blog::Model;
+use App::skryf::Plugin::Admin;
 use App::skryf::Util;
 
-our $VERSION = '0.001_02'; # VERSION
+use DDP;
+
+our $VERSION = '0.001_03'; # VERSION
 
 has indexPath   => '/blog/get_posts';
 has postPath    => '/blog/get_post/:slug';
@@ -36,7 +39,7 @@ sub register {
         cb => sub {
             my $self     = shift;
             my $category = $self->param('category');
-            my $posts    = $self->app->model->by_cat($category);
+            my $posts    = $self->model->by_cat($category);
             my $feed     = App::skryf::Util->feed($self->config, $posts);
             $self->render(text => $feed->as_string, format => 'xml');
         }
@@ -45,7 +48,7 @@ sub register {
     $app->routes->route($self->indexPath)->via('GET')->to(
         cb => sub {
             my $self = shift;
-            $self->render(json => $self->app->model->all);
+            $self->render(json => $self->model->all);
         }
     )->name('blog_get_posts');
 
@@ -57,9 +60,9 @@ sub register {
             unless ($slug =~ /^[A-Za-z0-9_-]+$/) {
                 $post = {msg => 'Invalid post'};
             }
-            my $post = $self->app->model->get($slug);
+            $post = $self->model->get($slug);
             if (!$post) {
-                $self->app->log->debug('No post found for: ' . $slug);
+                $app->log->debug('No post found for: ' . $slug);
                 $post = {msg => 'No post found'};
             }
 
@@ -67,6 +70,40 @@ sub register {
         }
     )->name('blog_get_post');
 
+    # Administration section
+    my $admin = App::skryf::Plugin::Admin->new(app => $app);
+    if ($admin->is_admin) {
+        $admin->auth_r->route('blog/dashboard')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {title => 'admin dashboard'});
+            }
+        )->name('admin_blog_dashboard');
+        $admin->auth_r->route('blog/new')->via(qw(GET POST))->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {title => 'blog new'});
+            }
+        )->name('admin_blog_new');
+        $admin->auth_r->route('blog/edit/:slug')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {title => 'blog edit'});
+            }
+        )->name('admin_blog_edit');
+        $admin->auth_r->route('blog/update')->via('POST')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {title => 'blog update'});
+            }
+        )->name('admin_blog_update');
+        $admin->auth_r->route('blog/delete/:slug')->via('GET')->to(
+            cb => sub {
+                my $self = shift;
+                $self->render(json => {title => 'blog delete'});
+            }
+        )->name('admin_blog_delete');
+    }
     return;
 }
 

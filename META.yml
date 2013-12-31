@@ -3,7 +3,6 @@ abstract: 'Skryf blog plugin'
 author:
   - 'Adam Stokes <adamjs@cpan.org>'
 build_requires:
-  DDP: 0
   FindBin: 0
   List::Util: 0
   Test::Mojo: 0
@@ -21,7 +20,9 @@ meta-spec:
   version: 1.4
 name: App-skryf-Plugin-Blog
 requires:
+  App::skryf::Plugin::Admin: 0
   App::skryf::Util: 0
+  DDP: 0
   DateTime: 0
   DateTime::Format::RFC3339: 0
   Mango::BSON: 0
@@ -31,4 +32,4 @@ requires:
 resources:
   homepage: https://github.com/skryf/App-skryf-Plugin-Blog
   repository: https://github.com/skryf/App-skryf-Plugin-Blog.git
-version: 0.001_02
+version: 0.001_03

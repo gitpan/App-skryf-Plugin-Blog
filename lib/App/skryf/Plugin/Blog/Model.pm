@@ -1,6 +1,6 @@
 package App::skryf::Plugin::Blog::Model;
 
-our $VERSION = '0.001_02'; # VERSION
+our $VERSION = '0.001_03'; # VERSION
 
 use Mojo::Base 'App::skryf::Model::Base';
 use Mango::BSON ':bson';

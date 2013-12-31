@@ -20,7 +20,9 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "App::skryf::Plugin::Blog",
   "PREREQ_PM" => {
+    "App::skryf::Plugin::Admin" => 0,
     "App::skryf::Util" => 0,
+    "DDP" => 0,
     "DateTime" => 0,
     "DateTime::Format::RFC3339" => 0,
     "Mango::BSON" => 0,
@@ -29,7 +31,6 @@ my %WriteMakefileArgs = (
     "Mojo::JSON" => 0
   },
   "TEST_REQUIRES" => {
-    "DDP" => 0,
     "FindBin" => 0,
     "List::Util" => 0,
     "Test::Mojo" => 0,
@@ -38,7 +39,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.001_02",
+  "VERSION" => "0.001_03",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -46,6 +47,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "App::skryf::Plugin::Admin" => 0,
   "App::skryf::Util" => 0,
   "DDP" => 0,
   "DateTime" => 0,
